@@ -5,6 +5,7 @@
         <h3>{{ item }}</h3>
       </el-carousel-item>
     </el-carousel>
+    <el-footer >Footer</el-footer>
   </div>
 </template>
 
