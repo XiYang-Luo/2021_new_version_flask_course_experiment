@@ -11,7 +11,7 @@
       </el-menu-item>
       <el-submenu index='2'>
         <template slot='title'>
-          <router-link to='/helloworld' class='router-style'>工具</router-link>
+          工具
         </template>
         <el-menu-item index='2-1' @click="toBlast">
           BLAST
@@ -66,7 +66,9 @@ export default {
   methods: {
     // 判断是否登录 未登录则跳转到登录页面
     toBlast () {
-      if (this.$store.state.user === true) {
+      let storeToken = window.localStorage.getItem('token')
+      console.log('store_token', storeToken)
+      if (this.$store.state.user === true || storeToken['token'] !== '') {
         this.$router.replace('/blast')
       } else {
         this.$notify({

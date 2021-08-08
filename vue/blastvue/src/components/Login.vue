@@ -14,10 +14,10 @@
         <br>
         <el-form :model="signInForm" status-icon ref="signINForm" label-width="60px" class="demo-ruleForm" label-position="left" >
         <el-form-item label="用户名" prop="name0">
-            <el-input type="name" v-model="signInForm.name0"></el-input>
+            <el-input type="name" v-model="signInForm.name0" :clearable='true'></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pass0">
-            <el-input type="password" v-model="signInForm.pass0" autocomplete="off"></el-input>
+            <el-input type="password" v-model="signInForm.pass0" autocomplete="off" :clearable='true'></el-input>
         </el-form-item>
         <el-form-item style='float:left;'>
             <el-button type="primary" @click="submitSignInForm('signINForm')">提交</el-button>
@@ -35,13 +35,13 @@
         <br>
         <el-form :model="logonForm" status-icon ref="logonForm" label-width="60px" class="demo-ruleForm" label-position="left" >
         <el-form-item label="用户名" prop="name">
-            <el-input type="name" v-model="logonForm.name"></el-input>
+            <el-input type="name" v-model="logonForm.name" :clearable='true'></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pass">
-            <el-input type="password" v-model="logonForm.pass" autocomplete="off"></el-input>
+            <el-input type="password" v-model="logonForm.pass" autocomplete="off" :clearable='true'></el-input>
         </el-form-item>
         <el-form-item label="确认" prop="checkPass">
-            <el-input type="password" v-model="logonForm.checkPass" autocomplete="off"></el-input>
+            <el-input type="password" v-model="logonForm.checkPass" autocomplete="off" :clearable='true'></el-input>
         </el-form-item>
         <el-form-item style='float:left;'>
             <el-button type="primary" @click="submitLogonForm('logonForm')">提交</el-button>
@@ -77,13 +77,38 @@ export default {
     }
   },
   created () {
+    let d = window.localStorage.getItem('login')
+    let dd = JSON.parse(d)
+    if (dd['name'] !== '') {
+      this.signInForm.name0 = dd['name']
+      this.logonForm.name = dd['name']
+    }
+    if (dd['password'] !== '') {
+      this.signInForm.pass0 = dd['password']
+      this.logonForm.pass = dd['password']
+    }
+
     if (this.$store.state.user === true) {
-      this.$notify({
-        title: '成功',
-        message: '您已登陆成功！请勿重复登录',
+      this.$confirm('您已登录，是否退出登录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         type: 'warning'
+      }).then(() => {
+        this.$store.state.user = false
+        this.$store.state.login = '登陆/注册'
+        this.$store.state.token = ''
+        window.localStorage.setItem('token', JSON.stringify({token: ''}))
+        this.$message({
+          type: 'success',
+          message: '退出登录!'
+        })
+      }).catch(() => {
+        this.$router.replace('/home')
+        this.$message({
+          type: 'info',
+          message: '取消'
+        })
       })
-      this.$router.replace('/home')
     }
   },
   methods: {
@@ -114,6 +139,8 @@ export default {
           this.$store.state.user = true
           this.$store.state.login = '登陆成功'
           this.$store.state.token = response.data.token
+          window.localStorage.setItem('token', JSON.stringify({token: response.data.token}))
+          window.localStorage.setItem('login', JSON.stringify(data))
           this.$notify({
             title: '成功',
             message: '登陆成功！',
@@ -149,6 +176,8 @@ export default {
           this.$store.state.user = true
           this.$store.state.login = '登陆成功'
           this.$store.state.token = response.data.token
+          window.localStorage.setItem('token', JSON.stringify({token: response.data.token}))
+          window.localStorage.setItem('login', JSON.stringify(data))
           this.$notify({
             title: '成功',
             message: '注册成功！',

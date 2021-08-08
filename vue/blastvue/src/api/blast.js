@@ -7,3 +7,10 @@ export function getBlast (params) {
     params
   })
 }
+export function getBlastHistory (params) {
+  return request({
+    url: '/api/blast/blast-server/get-blast-history',
+    method: 'get',
+    params
+  })
+}

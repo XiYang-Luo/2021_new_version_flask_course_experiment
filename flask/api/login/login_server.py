@@ -12,8 +12,8 @@ from flask_restx import Api,Resource,reqparse
 # 使用 http://127.0.0.1:5000/login 可查看所有的api
 api = Api(login, version="1.0", title="login API", description="A simple login API")
 ns = api.namespace("login-server", description="logins operations")
-SECRET_KEY = 'xiyang'
-EXPIRED=15
+SECRET_KEY = 'secrect_xiyang'
+EXPIRED = 60*60
 # http://127.0.0.1:5000/login/login-server/test
 @ns.route('/test')
 class Servers(Resource):
@@ -31,13 +31,13 @@ class Users(Resource):
         # print(json.loads(data['users']))
         userdata = json.loads(data['users'])
         user = User.query.filter_by(name=userdata['name'], password=userdata['password']).first()
-        s = Serializer(SECRET_KEY, expires_in=EXPIRED)
-        # token
-        token = s.dumps({"id": userdata['name']}).decode('ascii')
-        print(token)
         if user == None:
             return jsonify({"message":"没有查询到该用户", "code": 400})
         else:
+            # token
+            s = Serializer(SECRET_KEY, expires_in=EXPIRED)
+            token = s.dumps({"name": userdata['name'], "id": str(user.id)}).decode('ascii')
+            print(token)
             return jsonify({"message": "success", "code": 200, "token":token})
 
     def post(self):
@@ -53,7 +53,7 @@ class Users(Resource):
             print(user.id)
             # token
             s = Serializer(SECRET_KEY, expires_in=EXPIRED)
-            token = s.dumps({"id": userdata['name']}).decode('ascii')
+            token = s.dumps({"name": userdata['name'], "id": str(user.id)}).decode('ascii')
             return jsonify({"message":'注册成功',"code":200, "data":{"id":user.id,"token":token}})
         else:
             return jsonify({"message": '用户已存在', "code": 400, "data": user.id})
@@ -67,9 +67,10 @@ def verify_token(token):
     try:
         data = s.loads(token)
         print("token",data)
+        return {"message": "success", "code": 200,"data":data}
     except BadSignature:
         print('token不正确')
+        return {"message":"fail","code":400}
     except SignatureExpired:
         print('token过期')
-    # 校验通过返回True
-    return True
+        return {"message":"fail","code":400}
