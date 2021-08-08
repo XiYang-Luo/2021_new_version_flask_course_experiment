@@ -13,15 +13,15 @@
         <template slot='title'>
           <router-link to='/helloworld' class='router-style'>工具</router-link>
         </template>
-        <el-menu-item index='2-1'>
-          <router-link to='/blast' class='router-style'>BLAST</router-link>
+        <el-menu-item index='2-1' @click="toBlast">
+          BLAST
         </el-menu-item>
         <el-menu-item index='2-2'>待定...</el-menu-item>
         <el-menu-item index='2-3'>待定...</el-menu-item>
       </el-submenu>
       <el-menu-item index='3'>
-        <router-link to='/helloworld' class='router-style'>
-        <el-button  icon="el-icon-menu" size='small' style='border:solid red 0px;'>登录/注册</el-button>
+        <router-link to='/login' class='router-style'>
+        <el-button  icon="el-icon-menu" size='small' style='border:solid red 0px;'>{{this.$store.state.login}}</el-button>
         </router-link>
       </el-menu-item>
     </el-menu>
@@ -34,13 +34,49 @@
 import HelloWorld from './components/HelloWorld.vue'
 import Home from './components/Home.vue'
 import Blast from './components/Blast.vue'
-
+import Login from './components/Login.vue'
+// import { mapState } from 'vuex'
 export default {
   name: 'app',
   components: {
     HelloWorld,
     Home,
-    Blast
+    Blast,
+    Login
+  },
+  data () {
+    return {
+    }
+  },
+  created () {
+  },
+  mounted () {
+    console.log('ssss')
+  },
+  computed: {
+    isLogin () {
+      return this.$store.state.login
+    }
+  },
+  watch: {
+    isLogin (newVal, oldVal, deep = 'true') {
+      // console.log('sssssssss', newVal, oldVal)
+    }
+  },
+  methods: {
+    // 判断是否登录 未登录则跳转到登录页面
+    toBlast () {
+      if (this.$store.state.user === true) {
+        this.$router.replace('/blast')
+      } else {
+        this.$notify({
+          title: '提示',
+          message: '您还未登录，请先登录',
+          type: 'warning'
+        })
+        this.$router.replace('/login')
+      }
+    }
   }
 }
 </script>

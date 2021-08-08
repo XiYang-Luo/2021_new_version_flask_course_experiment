@@ -14,9 +14,12 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "element-ui": "^2.15.5",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-axios": "^3.2.5",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

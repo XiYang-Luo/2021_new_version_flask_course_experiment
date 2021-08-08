@@ -14,6 +14,11 @@ export default {
   name: 'Home',
   data () {
     return {}
+  },
+  created () {
+    console.log(this.$store.state.user)
+  },
+  methods: {
   }
 }
 </script>
