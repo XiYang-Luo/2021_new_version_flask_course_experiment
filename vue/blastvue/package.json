@@ -6,7 +6,7 @@
   "author": "XiYang-Luo <279813lxyz>",
   "scripts": {
     "build": "node build/build.js",
-    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
+    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs --fix",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "e2e": "node test/e2e/runner.js",
     "start": "npm run dev",

@@ -103,7 +103,6 @@ class getBlastHistory(Resource):
         if len(blastHistory)>=1:
             ret_data = []
             for row in blastHistory:
-                #print(row.id,row.sequence,row.content,row.user_id)
                 ret_data.append({"id": row.id, "seq": row.sequence,"user_name": row.user_name,
                                 "user_id": row.user_id,"project_name":row.project_name,
                                  "db_ncbi": row.db_ncbi,"e_value": row.e_value,"create_time": row.create_time,
